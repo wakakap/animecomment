@@ -1,0 +1,3 @@
+autosub [-i "D:\download\[VCB-Studio] Dagashi Kashi [Ma10p_1080p]"] [-S ja-JP]
+
+-i "D:\download\[VCB-Studio] Dagashi Kashi [Ma10p_1080p]\[VCB-Studio] Dagashi Kashi [01][Ma10p_1080p][x265_flac].mkv" -S ja-JP

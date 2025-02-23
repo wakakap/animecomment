@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AniSong Rank Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* 背景和整体布局 */
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background: linear-gradient(to bottom, #f0f8ff, #e6e6fa); /* 背景渐变色 */
+            margin: 0;
+            padding: 0;
+        }
+        /* 标题样式 */
+        h1 {
+            font-family: 'Comic Sans MS', cursive, sans-serif; /* 手写风格字体 */
+            color: #ff69b4; /* 粉色 */
+            margin-top: 20px;
+        }
+        /* SVG画布样式 */
+        svg {
+            background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
+            border: 2px solid #ccc;
+            border-radius: 15px; /* 圆角边框 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+            margin: 20px auto;
+            display: block;
+        }
+        /* 数据点样式 */
+        .dot {
+            fill: #4682b4; /* 钢蓝色 */
+            transition: transform 0.2s ease-out;
+        }
+        .dot:hover {
+            fill: #ffa500; /* 橙色 */
+            transform: scale(1.5);
+        }
+        /* 工具提示框样式 */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px;
+            border-radius: 5px;
+            font-size: 12px;
+            display: none;
+            pointer-events: none;
+        }
+        /* 按钮样式 */
+        .control-button {
+            background-color: #ff69b4; /* 粉色 */
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .control-button:hover {
+            background-color: #ff1493; /* 深粉色 */
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>AniSong Rank Visualization</h1>
+    <svg width="600" height="600"></svg>
+    <div class="tooltip"></div>
+    <!-- 控制按钮 -->
+    <button class="control-button" onclick="toggleMusic()">播放/暂停音乐</button>
+    <audio id="background-music" loop>
+        <source src="background-music.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+
+    <script>
+        const width = 600, height = 600;
+        const svg = d3.select("svg");
+        const tooltip = d3.select(".tooltip");
+
+        const xScale = d3.scaleLinear().domain([-100, 100]).range([50, width - 50]);
+        const yScale = d3.scaleLinear().domain([-100, 100]).range([height - 50, 50]);
+
+        // 绘制 X/Y 轴
+        svg.append("g")
+            .attr("transform", `translate(0,${height / 2})`)
+            .call(d3.axisBottom(xScale));
+        svg.append("g")
+            .attr("transform", `translate(${width / 2},0)`)
+            .call(d3.axisLeft(yScale));
+
+        // 动态加载 JSON 数据
+        d3.json("anime_song_rank.json").then(data => {
+            svg.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("cx", d => xScale(d.x))
+                .attr("cy", d => yScale(d.y))
+                .attr("r", 5)
+                .attr("class", "dot")
+                .on("mouseover", function(event, d) {
+                    d3.select(this).transition().attr("r", 10);
+                    tooltip.style("display", "block")
+                           .html(`<strong>${d.name}</strong><br>${d.anime}`)
+                           .style("left", (event.pageX + 10) + "px")
+                           .style("top", (event.pageY - 20) + "px");
+                })
+                .on("mouseout", function() {
+                    d3.select(this).transition().attr("r", 5);
+                    tooltip.style("display", "none");
+                });
+        }).catch(error => console.error("❌ 读取 JSON 失败:", error));
+
+        function toggleMusic() {
+            const music = document.getElementById("background-music");
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+    </script>
+</body>
+</html>

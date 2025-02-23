@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib.ticker import FixedLocator
 from textwrap import wrap
 # 读取文件内容
-file_path = 'others/anime_song_rank.txt'
+file_path = 'others/anime_song_rank/anime_song_rank.txt'
 songs = []
 
 with open(file_path, 'r', encoding='utf-8') as file:

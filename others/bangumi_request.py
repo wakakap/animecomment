@@ -28,6 +28,12 @@ def search_subjects(keyword):
         print(f"请求时发生错误: {e}")
 
 # 调用收藏接口
+# 条目类型
+# 1 = book
+# 2 = anime
+# 3 = music
+# 4 = game
+# 6 = real
 def get_collections(username, subject_type=2, type=2, limit=50, offset=0):
     url = f"{BASE_URL}/v0/users/{username}/collections"
     print(f"请求URL: {url}")

@@ -1,10 +1,11 @@
 import requests
-
+import os
+from dotenv import load_dotenv
 # API 基础 URL
 BASE_URL = "https://api.bgm.tv"
-
 # API Key (如果需要)
-API_KEY = ""  # 替换为你的 API Key
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
 
 # 自定义 User-Agent
 HEADERS = {
